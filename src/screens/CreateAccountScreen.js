@@ -18,6 +18,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import UpNavigation from '../components/UpNavigation';
+import TopDesign from '../components/TopDesign';
 import { useNavigation } from '@react-navigation/native';
 
 const CreateAccountScreen = ({ navigation }) => {
@@ -67,204 +68,207 @@ const CreateAccountScreen = ({ navigation }) => {
 	};
 
 	return (
-		<View
-			style={styles.container}
-			contentContainerStyle={{ flexGrow: 1 }}>
-			<UpNavigation />
-			<View style={styles.content}>
-				<Text style={styles.title}>Create an Account 😊</Text>
-				<Text style={styles.subtitle}>
-					Create your Unipaddy account to get started and gain access to all the
-					features!
-				</Text>
-
-				<View>
-					<Text style={styles.label}>Email Address</Text>
-					<View
-						style={[styles.inputWrapper, emailError ? styles.errorInput : {}]}>
-						<Icon
-							name='mail-outline'
-							size={20}
-							color='#9b9b9b'
-							style={[styles.iconLeft, emailError ? { color: 'red' } : {}]}
-						/>
-						<TextInput
-							style={[styles.input, emailError ? { color: 'red' } : {}]}
-							placeholder='Enter Email Address'
-							value={email}
-							onChangeText={validateEmail}
-						/>
-					</View>
-					{emailError ? (
-						<Text style={styles.errorText}>{emailError}</Text>
-					) : null}
-				</View>
-
-				<View>
-					<Text style={styles.label}>Password</Text>
-					<View
-						style={[
-							styles.inputWrapper,
-							{
-								borderColor: isFocused ? '#265BFF' : '#eee',
-								borderWidth: 1,
-							},
-						]}>
-						<Icon
-							name='lock-closed-outline'
-							size={20}
-							color='#9b9b9b'
-							style={styles.iconLeft}
-						/>
-						<TextInput
-							style={styles.input}
-							secureTextEntry={!isPasswordVisible}
-							value={password}
-							placeholder='Enter Password'
-							onChangeText={validatePassword}
-							onFocus={() => setIsFocused(true)}
-							onBlur={() => setIsFocused(false)}
-						/>
-						<TouchableOpacity
-							onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
+		<>
+			<TopDesign />
+			<View
+				style={styles.container}
+				contentContainerStyle={{ flexGrow: 1 }}>
+				<UpNavigation />
+				<View style={styles.content}>
+					<Text style={styles.title}>Create an Account 😊</Text>
+					<Text style={styles.subtitle}>
+						Create your Unipaddy account to get started and gain access to all the
+						features!
+					</Text>
+	
+					<View>
+						<Text style={styles.label}>Email Address</Text>
+						<View
+							style={[styles.inputWrapper, emailError ? styles.errorInput : {}]}>
 							<Icon
-								name={isPasswordVisible ? 'eye-off-outline' : 'eye-outline'}
+								name='mail-outline'
 								size={20}
 								color='#9b9b9b'
-								style={styles.iconRight}
+								style={[styles.iconLeft, emailError ? { color: 'red' } : {}]}
 							/>
-						</TouchableOpacity>
+							<TextInput
+								style={[styles.input, emailError ? { color: 'red' } : {}]}
+								placeholder='Enter Email Address'
+								value={email}
+								onChangeText={validateEmail}
+							/>
+						</View>
+						{emailError ? (
+							<Text style={styles.errorText}>{emailError}</Text>
+						) : null}
 					</View>
-				</View>
-
-				<View style={styles.validationContainer}>
-					<Text style={styles.validationsText}>
-						{validations.uppercase ? '✔️' : '❌'} Uppercase
-					</Text>
-					<Text style={styles.validationsText}>
-						{validations.lowercase ? '✔️' : '❌'} Lowercase
-					</Text>
-					<Text style={styles.validationsText}>
-						{validations.number ? '✔️' : '❌'} Number
-					</Text>
-					<Text style={styles.validationsText}>
-						{validations.length ? '✔️' : '❌'} 8 Characters
-					</Text>
-					<Text style={styles.validationsText}>
-						{validations.specialChar ? '✔️' : '❌'} Special Character
-					</Text>
-				</View>
-
-				<View>
-					<Text style={styles.label}>Confirm Password</Text>
-					<View
-						style={[
-							styles.inputWrapper,
-							{
-								borderColor: isFocused ? '#265BFF' : '#eee',
-								borderWidth: 1,
-							},
-						]}>
-						<Icon
-							name='lock-closed-outline'
-							size={20}
-							color='#9b9b9b'
-							style={styles.iconLeft}
-						/>
-						<TextInput
-							style={[styles.input, {}]}
-							secureTextEntry={!isPasswordVisible}
-							value={confirmPassword}
-							placeholder='Confirm Your Password'
-							onChangeText={setConfirmPassword}
-							onFocus={() => setIsFocused(true)}
-							onBlur={() => setIsFocused(false)}
-						/>
-						<TouchableOpacity
-							onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
+	
+					<View>
+						<Text style={styles.label}>Password</Text>
+						<View
+							style={[
+								styles.inputWrapper,
+								{
+									borderColor: isFocused ? '#265BFF' : '#eee',
+									borderWidth: 1,
+								},
+							]}>
 							<Icon
-								name={isPasswordVisible ? 'eye-off-outline' : 'eye-outline'}
+								name='lock-closed-outline'
 								size={20}
 								color='#9b9b9b'
-								style={styles.iconRight}
+								style={styles.iconLeft}
 							/>
-						</TouchableOpacity>
+							<TextInput
+								style={styles.input}
+								secureTextEntry={!isPasswordVisible}
+								value={password}
+								placeholder='Enter Password'
+								onChangeText={validatePassword}
+								onFocus={() => setIsFocused(true)}
+								onBlur={() => setIsFocused(false)}
+							/>
+							<TouchableOpacity
+								onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
+								<Icon
+									name={isPasswordVisible ? 'eye-off-outline' : 'eye-outline'}
+									size={20}
+									color='#9b9b9b'
+									style={styles.iconRight}
+								/>
+							</TouchableOpacity>
+						</View>
 					</View>
-					{!isConfirmValid && confirmPassword.length > 0 && (
-						<View style={{ bottom: 16 }}>
-							<Text style={{ color: 'red', fontFamily: 'GeneralSans-Regular' }}>
-								Passwords do not match!
-							</Text>
-						</View>
-					)}
-					{isConfirmValid && (
-						<View style={{ bottom: 16 }}>
-							<Text
-								style={{
-									color: 'green',
-									fontFamily: 'GeneralSans-Regular',
-								}}>
-								Passwords are a match!
-							</Text>
-						</View>
-					)}
-				</View>
-
-				<View style={styles.rowBetween}>
-					<View style={styles.rememberMeContainer}>
-						<Checkbox
-							value={rememberMe}
-							onValueChange={setRememberMe}
-							color={rememberMe ? '#265BFF' : undefined}
-						/>
-						<Text style={styles.rememberMeText}>
-							By signing up you agree to our terms of service
+	
+					<View style={styles.validationContainer}>
+						<Text style={styles.validationsText}>
+							{validations.uppercase ? '✔️' : '❌'} Uppercase
+						</Text>
+						<Text style={styles.validationsText}>
+							{validations.lowercase ? '✔️' : '❌'} Lowercase
+						</Text>
+						<Text style={styles.validationsText}>
+							{validations.number ? '✔️' : '❌'} Number
+						</Text>
+						<Text style={styles.validationsText}>
+							{validations.length ? '✔️' : '❌'} 8 Characters
+						</Text>
+						<Text style={styles.validationsText}>
+							{validations.specialChar ? '✔️' : '❌'} Special Character
 						</Text>
 					</View>
-				</View>
-
-				<TouchableOpacity
-					style={[
-						styles.buttonWrapper,
-						{ opacity: emailError === '' ? 1 : 0.5 },
-					]}
-					disabled={emailError !== ''}
-					onPress={handleSubmit}>
-					<LinearGradient
-						colors={['#265BFF', '#1E4CF0']}
-						style={styles.button}>
-						<Text style={styles.buttonText}>Sign Up</Text>
-					</LinearGradient>
-				</TouchableOpacity>
-
-				{/* <View style={styles.orsignin}>
-					<Image source={require('../../assets/images/icons/line.png')} />
-					<Text style={styles.orText}>Or Sign Up Using</Text>
-					<Image source={require('../../assets/images/icons/line.png')} />
-				</View> */}
-
-				{/* <View style={styles.socialButtonsContainer}>
-					<TouchableOpacity style={styles.socialButton}>
-						<Image source={require('../../assets/images/icons/google.png')} />
+	
+					<View>
+						<Text style={styles.label}>Confirm Password</Text>
+						<View
+							style={[
+								styles.inputWrapper,
+								{
+									borderColor: isFocused ? '#265BFF' : '#eee',
+									borderWidth: 1,
+								},
+							]}>
+							<Icon
+								name='lock-closed-outline'
+								size={20}
+								color='#9b9b9b'
+								style={styles.iconLeft}
+							/>
+							<TextInput
+								style={[styles.input, {}]}
+								secureTextEntry={!isPasswordVisible}
+								value={confirmPassword}
+								placeholder='Confirm Your Password'
+								onChangeText={setConfirmPassword}
+								onFocus={() => setIsFocused(true)}
+								onBlur={() => setIsFocused(false)}
+							/>
+							<TouchableOpacity
+								onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
+								<Icon
+									name={isPasswordVisible ? 'eye-off-outline' : 'eye-outline'}
+									size={20}
+									color='#9b9b9b'
+									style={styles.iconRight}
+								/>
+							</TouchableOpacity>
+						</View>
+						{!isConfirmValid && confirmPassword.length > 0 && (
+							<View style={{ bottom: 16 }}>
+								<Text style={{ color: 'red', fontFamily: 'GeneralSans-Regular' }}>
+									Passwords do not match!
+								</Text>
+							</View>
+						)}
+						{isConfirmValid && (
+							<View style={{ bottom: 16 }}>
+								<Text
+									style={{
+										color: 'green',
+										fontFamily: 'GeneralSans-Regular',
+									}}>
+									Passwords are a match!
+								</Text>
+							</View>
+						)}
+					</View>
+	
+					<View style={styles.rowBetween}>
+						<View style={styles.rememberMeContainer}>
+							<Checkbox
+								value={rememberMe}
+								onValueChange={setRememberMe}
+								color={rememberMe ? '#265BFF' : undefined}
+							/>
+							<Text style={styles.rememberMeText}>
+								By signing up you agree to our terms of service
+							</Text>
+						</View>
+					</View>
+	
+					<TouchableOpacity
+						style={[
+							styles.buttonWrapper,
+							{ opacity: emailError === '' ? 1 : 0.5 },
+						]}
+						disabled={emailError !== ''}
+						onPress={handleSubmit}>
+						<LinearGradient
+							colors={['#265BFF', '#1E4CF0']}
+							style={styles.button}>
+							<Text style={styles.buttonText}>Sign Up</Text>
+						</LinearGradient>
 					</TouchableOpacity>
-					<TouchableOpacity style={styles.socialButton}>
-						<Image source={require('../../assets/images/icons/facebook.png')} />
-					</TouchableOpacity>
-					{Platform.OS === 'ios' && (
+	
+					{/* <View style={styles.orsignin}>
+						<Image source={require('../../assets/images/icons/line.png')} />
+						<Text style={styles.orText}>Or Sign Up Using</Text>
+						<Image source={require('../../assets/images/icons/line.png')} />
+					</View> */}
+	
+					{/* <View style={styles.socialButtonsContainer}>
 						<TouchableOpacity style={styles.socialButton}>
-							<Image source={require('../../assets/images/icons/apple.png')} />
+							<Image source={require('../../assets/images/icons/google.png')} />
 						</TouchableOpacity>
-					)}
-				</View> */}
-
-				<View style={styles.footerTextContainer}>
-					<Text style={styles.footerText}>Already have an account?</Text>
-					<TouchableOpacity onPress={() => navigation.navigate('Login')}>
-						<Text style={styles.createAccountText}> Login</Text>
-					</TouchableOpacity>
+						<TouchableOpacity style={styles.socialButton}>
+							<Image source={require('../../assets/images/icons/facebook.png')} />
+						</TouchableOpacity>
+						{Platform.OS === 'ios' && (
+							<TouchableOpacity style={styles.socialButton}>
+								<Image source={require('../../assets/images/icons/apple.png')} />
+							</TouchableOpacity>
+						)}
+					</View> */}
+	
+					<View style={styles.footerTextContainer}>
+						<Text style={styles.footerText}>Already have an account?</Text>
+						<TouchableOpacity onPress={() => navigation.navigate('Login')}>
+							<Text style={styles.createAccountText}> Login</Text>
+						</TouchableOpacity>
+					</View>
 				</View>
 			</View>
-		</View>
+		</>
 	);
 };
 
@@ -282,6 +286,7 @@ const styles = StyleSheet.create({
 		paddingTop: 30,
 		justifyContent: 'center',
 		paddingBottom: 40,
+		zIndex: 20
 	},
 
 	title: {

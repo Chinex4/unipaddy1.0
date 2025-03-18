@@ -7,6 +7,7 @@ import {
 	StyleSheet,
 } from 'react-native';
 import UpNavigation from '../components/UpNavigation';
+import TopDesign from '../components/TopDesign';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const CreateNewPasswordScreen = ({ navigation }) => {
@@ -44,133 +45,136 @@ const CreateNewPasswordScreen = ({ navigation }) => {
 	};
 
 	return (
-		<View style={styles.container}>
-			<UpNavigation />
-			<View style={styles.content}>
-				<Text style={styles.title}>Create New Password</Text>
-				<Text style={styles.subtitle}>Create new password</Text>
-				<View>
-					<Text style={styles.label}>Enter Password</Text>
-					<View style={[
-							styles.inputWrapper,
-							{
-								borderColor: isFocused ? '#265BFF' : '#eee',
-								borderWidth: 1,
-							},
-						]}>
-						<Icon
-							name='lock-closed-outline'
-							size={20}
-							color='#9b9b9b'
-							style={styles.iconLeft}
-						/>
-						<TextInput
-							style={styles.input}
-							secureTextEntry={!isPasswordVisible}
-							value={password}
-							placeholder='Enter Password'
-							onChangeText={validatePassword}
-							onFocus={() => setIsFocused(true)}
-							onBlur={() => setIsFocused(false)}
-						/>
-						<TouchableOpacity
-							onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
+		<>
+			<TopDesign />
+			<View style={styles.container}>
+				<UpNavigation />
+				<View style={styles.content}>
+					<Text style={styles.title}>Create New Password</Text>
+					<Text style={styles.subtitle}>Create new password</Text>
+					<View>
+						<Text style={styles.label}>Enter Password</Text>
+						<View style={[
+								styles.inputWrapper,
+								{
+									borderColor: isFocused ? '#265BFF' : '#eee',
+									borderWidth: 1,
+								},
+							]}>
 							<Icon
-								name={isPasswordVisible ? 'eye-off-outline' : 'eye-outline'}
+								name='lock-closed-outline'
 								size={20}
 								color='#9b9b9b'
-								style={styles.iconRight}
+								style={styles.iconLeft}
 							/>
-						</TouchableOpacity>
+							<TextInput
+								style={styles.input}
+								secureTextEntry={!isPasswordVisible}
+								value={password}
+								placeholder='Enter Password'
+								onChangeText={validatePassword}
+								onFocus={() => setIsFocused(true)}
+								onBlur={() => setIsFocused(false)}
+							/>
+							<TouchableOpacity
+								onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
+								<Icon
+									name={isPasswordVisible ? 'eye-off-outline' : 'eye-outline'}
+									size={20}
+									color='#9b9b9b'
+									style={styles.iconRight}
+								/>
+							</TouchableOpacity>
+						</View>
+					</View>
+	
+					<View style={styles.validationContainer}>
+						<Text style={styles.validationsText}>
+							{validations.uppercase ? '✔️' : '❌'} Uppercase
+						</Text>
+						<Text style={styles.validationsText}>
+							{validations.lowercase ? '✔️' : '❌'} Lowercase
+						</Text>
+						<Text style={styles.validationsText}>
+							{validations.number ? '✔️' : '❌'} Number
+						</Text>
+						<Text style={styles.validationsText}>
+							{validations.length ? '✔️' : '❌'} 8 Characters
+						</Text>
+						<Text style={styles.validationsText}>
+							{validations.specialChar ? '✔️' : '❌'} Special Character
+						</Text>
+					</View>
+	
+					<View>
+						<Text style={styles.label}>Confirm Password</Text>
+						<View
+							style={[
+								styles.inputWrapper,
+								{
+									borderColor: isFocused ? '#265BFF' : '#eee',
+									borderWidth: 1,
+								},
+							]}>
+							<Icon
+								name='lock-closed-outline'
+								size={20}
+								color='#9b9b9b'
+								style={styles.iconLeft}
+							/>
+							<TextInput
+								style={[styles.input, {}]}
+								secureTextEntry={!isPasswordVisible}
+								value={confirmPassword}
+								placeholder='Confirm Your Password'
+								onChangeText={setConfirmPassword}
+								onFocus={() => setIsFocused(true)}
+								onBlur={() => setIsFocused(false)}
+							/>
+							<TouchableOpacity
+								onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
+								<Icon
+									name={isPasswordVisible ? 'eye-off-outline' : 'eye-outline'}
+									size={20}
+									color='#9b9b9b'
+									style={styles.iconRight}
+								/>
+							</TouchableOpacity>
+						</View>
+						{!isConfirmValid && confirmPassword.length > 0 && (
+							<View style={{ bottom: 16 }}>
+								<Text style={{ color: 'red', fontFamily: 'GeneralSans-Regular' }}>
+									Passwords do not match!
+								</Text>
+							</View>
+						)}
+						{isConfirmValid && (
+							<View style={{ bottom: 16 }}>
+								<Text
+									style={{ color: 'green', fontFamily: 'GeneralSans-Regular' }}>
+									Passwords are a match!
+								</Text>
+							</View>
+						)}
 					</View>
 				</View>
-
-				<View style={styles.validationContainer}>
-					<Text style={styles.validationsText}>
-						{validations.uppercase ? '✔️' : '❌'} Uppercase
-					</Text>
-					<Text style={styles.validationsText}>
-						{validations.lowercase ? '✔️' : '❌'} Lowercase
-					</Text>
-					<Text style={styles.validationsText}>
-						{validations.number ? '✔️' : '❌'} Number
-					</Text>
-					<Text style={styles.validationsText}>
-						{validations.length ? '✔️' : '❌'} 8 Characters
-					</Text>
-					<Text style={styles.validationsText}>
-						{validations.specialChar ? '✔️' : '❌'} Special Character
-					</Text>
-				</View>
-
-				<View>
-					<Text style={styles.label}>Confirm Password</Text>
-					<View
+	
+				<View style={styles.buttonWrapper}>
+					<TouchableOpacity
+						disabled={!isPasswordValid || !isConfirmValid}
+						onPress={handleSubmit}
 						style={[
-							styles.inputWrapper,
+							styles.button,
 							{
-								borderColor: isFocused ? '#265BFF' : '#eee',
-								borderWidth: 1,
+								backgroundColor:
+									isPasswordValid && isConfirmValid ? '#265BFF' : '#D0D5DD',
 							},
 						]}>
-						<Icon
-							name='lock-closed-outline'
-							size={20}
-							color='#9b9b9b'
-							style={styles.iconLeft}
-						/>
-						<TextInput
-							style={[styles.input, {}]}
-							secureTextEntry={!isPasswordVisible}
-							value={confirmPassword}
-							placeholder='Confirm Your Password'
-							onChangeText={setConfirmPassword}
-							onFocus={() => setIsFocused(true)}
-							onBlur={() => setIsFocused(false)}
-						/>
-						<TouchableOpacity
-							onPress={() => setIsPasswordVisible(!isPasswordVisible)}>
-							<Icon
-								name={isPasswordVisible ? 'eye-off-outline' : 'eye-outline'}
-								size={20}
-								color='#9b9b9b'
-								style={styles.iconRight}
-							/>
-						</TouchableOpacity>
-					</View>
-					{!isConfirmValid && confirmPassword.length > 0 && (
-						<View style={{ bottom: 16 }}>
-							<Text style={{ color: 'red', fontFamily: 'GeneralSans-Regular' }}>
-								Passwords do not match!
-							</Text>
-						</View>
-					)}
-					{isConfirmValid && (
-						<View style={{ bottom: 16 }}>
-							<Text
-								style={{ color: 'green', fontFamily: 'GeneralSans-Regular' }}>
-								Passwords are a match!
-							</Text>
-						</View>
-					)}
+						<Text style={styles.buttonText}>Continue</Text>
+					</TouchableOpacity>
 				</View>
 			</View>
-
-			<View style={styles.buttonWrapper}>
-				<TouchableOpacity
-					disabled={!isPasswordValid || !isConfirmValid}
-					onPress={handleSubmit}
-					style={[
-						styles.button,
-						{
-							backgroundColor:
-								isPasswordValid && isConfirmValid ? '#265BFF' : '#D0D5DD',
-						},
-					]}>
-					<Text style={styles.buttonText}>Continue</Text>
-				</TouchableOpacity>
-			</View>
-		</View>
+		</>
 	);
 };
 
@@ -189,6 +193,7 @@ const styles = StyleSheet.create({
 	},
 	content: {
 		marginTop: 30,
+		zIndex:20
 	},
 	title: {
 		fontSize: 30,

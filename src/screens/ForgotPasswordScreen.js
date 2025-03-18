@@ -57,7 +57,6 @@ const VerificationInfoScreen = ({ route }) => {
 
 	return (
 		<>
-			<TopDesign />
 			<View style={styles.container}>
 				<UpNavigation />
 				<View style={styles.content}>
@@ -100,43 +99,46 @@ const OTPVerificationScreen = ({ route }) => {
 	  
 
 	return (
-		<View style={styles.container}>
-			<UpNavigation />
-			<View style={styles.content}>
-				<Text style={styles.title}>Enter Verification Code</Text>
-				<Text style={styles.subtitle}>
-					Enter the code sent to {route.params.email}
-				</Text>
-				<View style={styles.otpContainer}>
-					{otp.map((digit, index) => (
-						<TextInput
-							key={index}
-							ref={inputRefs[index]}
-							style={styles.otpInput}
-							keyboardType='numeric'
-							maxLength={1}
-							value={digit}
-							onChangeText={(text) => handleOtpChange(text, index)}
-						/>
-					))}
+		<>
+			<TopDesign />
+			<View style={styles.container}>
+				<UpNavigation />
+				<View style={styles.content}>
+					<Text style={styles.title}>Enter Verification Code</Text>
+					<Text style={styles.subtitle}>
+						Enter the code sent to {route.params.email}
+					</Text>
+					<View style={styles.otpContainer}>
+						{otp.map((digit, index) => (
+							<TextInput
+								key={index}
+								ref={inputRefs[index]}
+								style={styles.otpInput}
+								keyboardType='numeric'
+								maxLength={1}
+								value={digit}
+								onChangeText={(text) => handleOtpChange(text, index)}
+							/>
+						))}
+					</View>
+					<TouchableOpacity
+						style={[
+							styles.button,
+							{ opacity: otp.join('').length === 4 ? 1 : 0.5 },
+						]}
+						disabled={otp.join('').length !== 4}
+						onPress={handleOTPVerification}>
+						<Text style={styles.buttonText}>Continue</Text>
+					</TouchableOpacity>
 				</View>
-				<TouchableOpacity
-					style={[
-						styles.button,
-						{ opacity: otp.join('').length === 4 ? 1 : 0.5 },
-					]}
-					disabled={otp.join('').length !== 4}
-					onPress={handleOTPVerification}>
-					<Text style={styles.buttonText}>Continue</Text>
-				</TouchableOpacity>
+				<View style={styles.footerTextContainer}>
+					<Text style={styles.footerText}>Didn't receive any code?</Text>
+					<TouchableOpacity>
+						<Text style={styles.createAccountText}> Resend</Text>
+					</TouchableOpacity>
+				</View>
 			</View>
-			<View style={styles.footerTextContainer}>
-				<Text style={styles.footerText}>Didn't receive any code?</Text>
-				<TouchableOpacity>
-					<Text style={styles.createAccountText}> Resend</Text>
-				</TouchableOpacity>
-			</View>
-		</View>
+		</>
 	);
 };
 

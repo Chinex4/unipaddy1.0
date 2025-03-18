@@ -200,6 +200,7 @@ const styles = StyleSheet.create({
 		paddingVertical: 18,
 		fontSize: 16,
 		fontFamily: 'GeneralSans-Regular',
+		zIndex: 40
 	},
 
 	iconLeft: {

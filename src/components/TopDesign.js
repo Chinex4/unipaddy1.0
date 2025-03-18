@@ -14,7 +14,7 @@ export default TopDesign;
 const styles = StyleSheet.create({
 	image: {
 		width: '110%',
-		height: '50%',
+		height: '48%',
 		padding: 10,
 		position: 'absolute',
 		zIndex: 10,
