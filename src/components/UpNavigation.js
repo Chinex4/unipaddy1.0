@@ -16,15 +16,15 @@ const UpNavigation = ({ displayName = 'Guest' }) => {
 
 	return (
 		<View style={styles.upNavigation}>
-			<View style={styles.arrowContainer}>
-				<TouchableOpacity onPress={handleGoBack}>
+			<TouchableOpacity onPress={handleGoBack}>
+				<View style={styles.arrowContainer}>
 					<Ionicons
 						name='arrow-back-outline'
 						size={20}
 						color='#9b9b9b'
 					/>
-				</TouchableOpacity>
-			</View>
+				</View>
+			</TouchableOpacity>
 			<View>
 				<Image source={require('../../assets/images/logo2.png')} />
 			</View>

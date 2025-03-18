@@ -1,151 +1,208 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
 	View,
 	Text,
-	StyleSheet,
 	TextInput,
 	TouchableOpacity,
 	Image,
+	StyleSheet,
+	Keyboard,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import UpNavigation from '../components/UpNavigation';
 
-export default function ForgotPasswordScreen() {
+const ForgotPasswordScreen = () => {
 	const navigation = useNavigation();
-	const [code, setCode] = useState(['', '', '', '']);
-
-	const handleInputChange = (value, index) => {
-		const updatedCode = [...code];
-		updatedCode[index] = value;
-		setCode(updatedCode);
+	const [email, setEmail] = useState('');
+	const handleNavigate = () => {
+		if (email === '') {
+			alert('Please enter your email address.');
+		} else {
+			navigation.navigate('VerificationInfo', { email });
+		}
 	};
+	return (
+		<View style={styles.container}>
+			<UpNavigation />
+			<View style={styles.content}>
+				<Text style={styles.title}>Forgot Password</Text>
+				<Text style={styles.subtitle}>
+					Enter your email address to receive a verification code.
+				</Text>
+				<TextInput
+					style={styles.input}
+					placeholder='Enter your email'
+					keyboardType='email-address'
+					autoCapitalize='none'
+					value={email}
+					onChangeText={setEmail}
+				/>
+				<TouchableOpacity
+					style={styles.button}
+					onPress={handleNavigate}>
+					<Text style={styles.buttonText}>Continue</Text>
+				</TouchableOpacity>
+			</View>
+		</View>
+	);
+};
 
-	const isCodeComplete = code.every((digit) => digit !== '');
-
-	const onboardingData = [
-		{
-			image: require('../../assets/images/verification.png'),
-			title: 'Experience Easy Mode of Dues Payment',
-			description:
-				'Enjoy a fast, seamless, and hassle-free way to pay your dues with ease and convenience!',
-			buttonText: 'Continue',
-		},
-	];
+const VerificationInfoScreen = ({ route }) => {
+	const navigation = useNavigation();
+	const { email } = route.params;
 
 	return (
 		<View style={styles.container}>
-			{/* Back Button */}
-			<TouchableOpacity
-				style={styles.backButton}
-				onPress={() => navigation.goBack()}>
-				<Icon
-					name='arrow-back-outline'
-					size={24}
-					color='#9b9b9b'
+			<UpNavigation />
+			<View style={styles.content}>
+				<Image
+					source={require('../../assets/images/verification.png')}
+					style={styles.image}
 				/>
-			</TouchableOpacity>
-
-			{/* Illustration */}
-			<Image
-				source={require('../../assets/images/verification.png')}
-				style={styles.image}
-			/>
-
-			{/* Title & Instructions */}
-			<Text style={styles.title}>Verification Code</Text>
-			<Text style={styles.instructions}>
-				A 4-digit code has been sent to t*****@gmail.com
-			</Text>
-
-			{/* OTP Inputs */}
-			<View style={styles.otpContainer}>
-				{code.map((digit, index) => (
-					<TextInput
-						key={index}
-						style={styles.otpInput}
-						keyboardType='number-pad'
-						maxLength={1}
-						value={digit}
-						onChangeText={(value) => handleInputChange(value, index)}
-					/>
-				))}
-			</View>
-
-			{/* Continue Button */}
-			<TouchableOpacity
-				style={[
-					styles.continueButton,
-					{ backgroundColor: isCodeComplete ? '#1E40AF' : '#d3d3d3' },
-				]}
-				disabled={!isCodeComplete}
-				onPress={() => alert('Continue to next step!')}>
-				<Text style={styles.continueButtonText}>Continue</Text>
-			</TouchableOpacity>
-
-			{/* Resend Code */}
-			<TouchableOpacity>
-				<Text style={styles.resendCode}>
-					Didn't receive any code?{' '}
-					<Text style={{ color: '#1E40AF' }}>Resend Code</Text>
+				<Text style={styles.title}>Verification Code</Text>
+				<Text style={styles.subtitle}>
+					A 4-digit code has been sent to {email}
 				</Text>
-			</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.button}
+					onPress={() => navigation.navigate('OTPVerification', { email })}>
+					<Text style={styles.buttonText}>Continue</Text>
+				</TouchableOpacity>
+			</View>
 		</View>
 	);
-}
+};
+
+const OTPVerificationScreen = ({ route }) => {
+	const navigation = useNavigation();
+	const [otp, setOtp] = useState(['', '', '', '']);
+	const inputRefs = [useRef(), useRef(), useRef(), useRef()];
+
+	const handleOtpChange = (text, index) => {
+		if (text.length === 1 && index < 3) inputRefs[index + 1].current.focus();
+		const newOtp = [...otp];
+		newOtp[index] = text;
+		setOtp(newOtp);
+	};
+	const handleOTPVerification = () => {
+		if (otp.join('').length === 4) {
+		  // Assume OTP is verified
+		  navigation.navigate('CreateNewPassword');
+		}
+	  };
+	  
+
+	return (
+		<View style={styles.container}>
+			<UpNavigation />
+			<View style={styles.content}>
+				<Text style={styles.title}>Enter Verification Code</Text>
+				<Text style={styles.subtitle}>
+					Enter the code sent to {route.params.email}
+				</Text>
+				<View style={styles.otpContainer}>
+					{otp.map((digit, index) => (
+						<TextInput
+							key={index}
+							ref={inputRefs[index]}
+							style={styles.otpInput}
+							keyboardType='numeric'
+							maxLength={1}
+							value={digit}
+							onChangeText={(text) => handleOtpChange(text, index)}
+						/>
+					))}
+				</View>
+				<TouchableOpacity
+					style={[
+						styles.button,
+						{ opacity: otp.join('').length === 4 ? 1 : 0.5 },
+					]}
+					disabled={otp.join('').length !== 4}
+					onPress={handleOTPVerification}>
+					<Text style={styles.buttonText}>Continue</Text>
+				</TouchableOpacity>
+			</View>
+			<View style={styles.footerTextContainer}>
+				<Text style={styles.footerText}>Didn't receive any code?</Text>
+				<TouchableOpacity>
+					<Text style={styles.createAccountText}> Resend</Text>
+				</TouchableOpacity>
+			</View>
+		</View>
+	);
+};
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
+		alignItems: 'center',
+		paddingHorizontal: 12,
+		paddingTop: 65,
 		backgroundColor: '#fff',
-		paddingHorizontal: 20,
-		paddingTop: 40,
 	},
-	backButton: {
+	title: { fontSize: 30, marginBottom: 10, fontFamily: 'GeneralSans-Bold' },
+	content: {
+		marginTop: 30,
+		width: '100%',
+		// position: 'relative',
+		alignItems: 'center',
+	},
+	subtitle: {
+		fontSize: 16,
+		fontFamily: 'GeneralSans-Regular',
+		color: 'gray',
+		marginBottom: 20,
+		textAlign: 'center',
+	},
+	input: {
+		width: '90%',
+		padding: 20,
+		fontFamily: 'GeneralSans-Regular',
+		fontSize: 16,
+		borderWidth: 1,
+		borderRadius: 8,
 		marginBottom: 20,
 	},
-	image: {
-		width: '100%',
-		height: 200,
-		resizeMode: 'contain',
-		marginBottom: 30,
+	button: {
+		backgroundColor: 'blue',
+		padding: 15,
+		borderRadius: 8,
+		width: '90%',
+		alignItems: 'center',
+		position: 'absolute',
+		top: 550,
 	},
-	title: {
-		fontSize: 22,
-		fontWeight: 'bold',
-		marginBottom: 10,
-		textAlign: 'center',
-	},
-	instructions: {
-		color: '#6b6b6b',
-		textAlign: 'center',
-		marginBottom: 30,
-	},
+	buttonText: { color: 'white', fontSize: 16, fontFamily: 'GeneralSans-Bold' },
+	image: { width: '100%', marginBottom: 20 },
 	otpContainer: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
-		marginBottom: 30,
-	},
-	otpInput: {
-		width: 50,
-		height: 50,
-		borderRadius: 10,
-		borderWidth: 1,
-		borderColor: '#ccc',
-		textAlign: 'center',
-		fontSize: 18,
-	},
-	continueButton: {
-		paddingVertical: 15,
-		borderRadius: 10,
-		alignItems: 'center',
+		width: '80%',
 		marginBottom: 20,
 	},
-	continueButtonText: {
-		color: '#fff',
-		fontWeight: 'bold',
-	},
-	resendCode: {
-		color: '#6b6b6b',
+	otpInput: {
+		borderWidth: 1,
 		textAlign: 'center',
+		fontSize: 20,
+		width: 50,
+		height: 50,
+		borderRadius: 8,
+	},
+	footerContainer: {},
+	footerTextContainer: {
+		flexDirection: 'row',
+		justifyContent: 'center',
+		marginTop: 20,
+	},
+	footerText: {
+		color: '#9b9b9b',
+		fontFamily: 'GeneralSans-Regular',
+	},
+	createAccountText: {
+		color: '#265BFF',
+		fontFamily: 'GeneralSans-Semibold',
 	},
 });
+
+export { ForgotPasswordScreen, VerificationInfoScreen, OTPVerificationScreen };
