@@ -1,7 +1,7 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import UpNavigation from '../components/UpNavigation';
 
-const PasswordSuccessScreen = ({ navigation }) => {
+const EmailVerificationSuccessScreen = ({ navigation }) => {
 	return (
 		<View style={styles.container}>
 			<UpNavigation />
@@ -10,14 +10,14 @@ const PasswordSuccessScreen = ({ navigation }) => {
 					source={require('../../assets/images/pass-success.png')}
 					style={styles.image}
 				/>
-				<Text style={styles.title}>Password Successfully Changed</Text>
+				<Text style={styles.title}>Email Verification Successful</Text>
 				<Text style={styles.subtitle}>
-					You can now return back to Login page
+					You can now continue to Home page
 				</Text>
 				<TouchableOpacity
 					style={styles.button}
-					onPress={() => navigation.navigate('Login')}>
-					<Text style={styles.buttonText}>Return to Login</Text>
+					onPress={() => navigation.navigate('Home')}>
+					<Text style={styles.buttonText}>Continue to Home Page</Text>
 					<Image
 						source={require('../../assets/images/icons/arrow-right.png')}
 					/>
@@ -26,7 +26,7 @@ const PasswordSuccessScreen = ({ navigation }) => {
 		</View>
 	);
 };
-export default PasswordSuccessScreen;
+export default EmailVerificationSuccessScreen;
 
 const styles = StyleSheet.create({
 	container: {

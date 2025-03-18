@@ -18,6 +18,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import UpNavigation from '../components/UpNavigation';
 import { useNavigation } from '@react-navigation/native';
+import TopDesign from '../components/TopDesign';
 
 const LoginScreen = ({ navigation }) => {
 	const [email, setEmail] = useState('');
@@ -33,6 +34,7 @@ const LoginScreen = ({ navigation }) => {
 	return (
 		<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 			<SafeAreaView style={{ flex: 1 }}>
+				<TopDesign />
 				<KeyboardAvoidingView
 					behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
 					style={styles.container}>
@@ -100,7 +102,8 @@ const LoginScreen = ({ navigation }) => {
 								<Text style={styles.rememberMeText}>Remember Me</Text>
 							</View>
 
-							<TouchableOpacity onPress={() =>navigation.navigate('ForgotPassword')}>
+							<TouchableOpacity
+								onPress={() => navigation.navigate('ForgotPassword')}>
 								<Text style={styles.forgotPasswordText}>Forgot Password?</Text>
 							</TouchableOpacity>
 						</View>
@@ -198,7 +201,7 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontFamily: 'GeneralSans-Regular',
 	},
-	
+
 	iconLeft: {
 		marginRight: 10,
 	},

@@ -5,14 +5,28 @@ import {
 	TextInput,
 	TouchableOpacity,
 	StyleSheet,
+	Image,
+	ImageBackground,
+	KeyboardAvoidingView,
+	Platform,
+	TouchableWithoutFeedback,
+	Keyboard,
+	ScrollView,
 } from 'react-native';
-import UpNavigation from '../components/UpNavigation';
+import Checkbox from 'expo-checkbox';
+import { LinearGradient } from 'expo-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import UpNavigation from '../components/UpNavigation';
+import { useNavigation } from '@react-navigation/native';
 
-const CreateNewPasswordScreen = ({ navigation }) => {
+const CreateAccountScreen = ({ navigation }) => {
+	const [email, setEmail] = useState('');
+	const [emailError, setEmailError] = useState('');
 	const [password, setPassword] = useState('');
-	const [confirmPassword, setConfirmPassword] = useState('');
+	const [rememberMe, setRememberMe] = useState(false);
 	const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+	const [confirmPassword, setConfirmPassword] = useState('');
 	const [validations, setValidations] = useState({
 		uppercase: false,
 		lowercase: false,
@@ -21,6 +35,15 @@ const CreateNewPasswordScreen = ({ navigation }) => {
 		specialChar: false,
 	});
 	const [isFocused, setIsFocused] = useState(false);
+	const validateEmail = (text) => {
+		setEmail(text);
+		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+		if (!emailRegex.test(text)) {
+			setEmailError('Invalid email format');
+		} else {
+			setEmailError('');
+		}
+	};
 
 	const validatePassword = (text) => {
 		setPassword(text);
@@ -37,21 +60,50 @@ const CreateNewPasswordScreen = ({ navigation }) => {
 	const isConfirmValid = password && confirmPassword === password;
 
 	const handleSubmit = () => {
-		if (isPasswordValid && isConfirmValid) {
+		if (isPasswordValid && isConfirmValid && rememberMe) {
 			// TODO: Send new password to backend
-			navigation.navigate('PasswordSuccessScreen');
+			navigation.navigate('EmailVerificationInfo', { email });
 		}
 	};
 
 	return (
-		<View style={styles.container}>
+		<View
+			style={styles.container}
+			contentContainerStyle={{ flexGrow: 1 }}>
 			<UpNavigation />
 			<View style={styles.content}>
-				<Text style={styles.title}>Create New Password</Text>
-				<Text style={styles.subtitle}>Create new password</Text>
+				<Text style={styles.title}>Create an Account 😊</Text>
+				<Text style={styles.subtitle}>
+					Create your Unipaddy account to get started and gain access to all the
+					features!
+				</Text>
+
 				<View>
-					<Text style={styles.label}>Enter Password</Text>
-					<View style={[
+					<Text style={styles.label}>Email Address</Text>
+					<View
+						style={[styles.inputWrapper, emailError ? styles.errorInput : {}]}>
+						<Icon
+							name='mail-outline'
+							size={20}
+							color='#9b9b9b'
+							style={[styles.iconLeft, emailError ? { color: 'red' } : {}]}
+						/>
+						<TextInput
+							style={[styles.input, emailError ? { color: 'red' } : {}]}
+							placeholder='Enter Email Address'
+							value={email}
+							onChangeText={validateEmail}
+						/>
+					</View>
+					{emailError ? (
+						<Text style={styles.errorText}>{emailError}</Text>
+					) : null}
+				</View>
+
+				<View>
+					<Text style={styles.label}>Password</Text>
+					<View
+						style={[
 							styles.inputWrapper,
 							{
 								borderColor: isFocused ? '#265BFF' : '#eee',
@@ -148,48 +200,90 @@ const CreateNewPasswordScreen = ({ navigation }) => {
 					{isConfirmValid && (
 						<View style={{ bottom: 16 }}>
 							<Text
-								style={{ color: 'green', fontFamily: 'GeneralSans-Regular' }}>
+								style={{
+									color: 'green',
+									fontFamily: 'GeneralSans-Regular',
+								}}>
 								Passwords are a match!
 							</Text>
 						</View>
 					)}
 				</View>
-			</View>
 
-			<View style={styles.buttonWrapper}>
+				<View style={styles.rowBetween}>
+					<View style={styles.rememberMeContainer}>
+						<Checkbox
+							value={rememberMe}
+							onValueChange={setRememberMe}
+							color={rememberMe ? '#265BFF' : undefined}
+						/>
+						<Text style={styles.rememberMeText}>
+							By signing up you agree to our terms of service
+						</Text>
+					</View>
+				</View>
+
 				<TouchableOpacity
-					disabled={!isPasswordValid || !isConfirmValid}
-					onPress={handleSubmit}
 					style={[
-						styles.button,
-						{
-							backgroundColor:
-								isPasswordValid && isConfirmValid ? '#265BFF' : '#D0D5DD',
-						},
-					]}>
-					<Text style={styles.buttonText}>Continue</Text>
+						styles.buttonWrapper,
+						{ opacity: emailError === '' ? 1 : 0.5 },
+					]}
+					disabled={emailError !== ''}
+					onPress={handleSubmit}>
+					<LinearGradient
+						colors={['#265BFF', '#1E4CF0']}
+						style={styles.button}>
+						<Text style={styles.buttonText}>Sign Up</Text>
+					</LinearGradient>
 				</TouchableOpacity>
+
+				{/* <View style={styles.orsignin}>
+					<Image source={require('../../assets/images/icons/line.png')} />
+					<Text style={styles.orText}>Or Sign Up Using</Text>
+					<Image source={require('../../assets/images/icons/line.png')} />
+				</View> */}
+
+				{/* <View style={styles.socialButtonsContainer}>
+					<TouchableOpacity style={styles.socialButton}>
+						<Image source={require('../../assets/images/icons/google.png')} />
+					</TouchableOpacity>
+					<TouchableOpacity style={styles.socialButton}>
+						<Image source={require('../../assets/images/icons/facebook.png')} />
+					</TouchableOpacity>
+					{Platform.OS === 'ios' && (
+						<TouchableOpacity style={styles.socialButton}>
+							<Image source={require('../../assets/images/icons/apple.png')} />
+						</TouchableOpacity>
+					)}
+				</View> */}
+
+				<View style={styles.footerTextContainer}>
+					<Text style={styles.footerText}>Already have an account?</Text>
+					<TouchableOpacity onPress={() => navigation.navigate('Login')}>
+						<Text style={styles.createAccountText}> Login</Text>
+					</TouchableOpacity>
+				</View>
 			</View>
 		</View>
 	);
 };
 
-export default CreateNewPasswordScreen;
+export default CreateAccountScreen;
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		// padding: 20,
-		paddingTop: 65,
+		paddingVertical: 65,
 		paddingHorizontal: 12,
 		fontFamily: 'GeneralSans-Regular',
 		backgroundColor: '#fff',
-		// justifyContent: 'center',
-		// paddingTop: 30,
 	},
 	content: {
-		marginTop: 30,
+		paddingTop: 30,
+		justifyContent: 'center',
+		paddingBottom: 40,
 	},
+
 	title: {
 		fontSize: 30,
 		fontFamily: 'GeneralSans-Bold',
@@ -222,13 +316,6 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		fontFamily: 'GeneralSans-Regular',
 	},
-
-	iconLeft: {
-		marginRight: 10,
-	},
-	iconRight: {
-		marginLeft: 10,
-	},
 	validationContainer: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
@@ -246,12 +333,47 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		alignItems: 'center',
 	},
+
+	iconLeft: {
+		marginRight: 10,
+	},
+	iconRight: {
+		marginLeft: 10,
+	},
+	rowBetween: {
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'center',
+		marginBottom: 20,
+	},
+	errorInput: {
+		borderColor: 'red',
+	},
+
+	errorText: {
+		color: 'red',
+		fontSize: 14,
+		bottom: 16,
+		// marginBottom: 5,
+	},
+	rememberMeContainer: {
+		flexDirection: 'row',
+		alignItems: 'center',
+	},
+	rememberMeText: {
+		marginLeft: 8,
+		fontFamily: 'GeneralSans-Regular',
+	},
+	forgotPasswordText: {
+		color: '#265BFF',
+		fontSize: 14,
+		textDecorationLine: 'underline',
+		fontFamily: 'GeneralSans-Regular',
+	},
 	buttonWrapper: {
-		// width: '90%',
 		borderRadius: 12,
 		overflow: 'hidden',
-		marginTop: 60,
-		top: 100,
+		marginBottom: 20,
 	},
 	button: {
 		paddingVertical: 15,
@@ -260,7 +382,43 @@ const styles = StyleSheet.create({
 	buttonText: {
 		color: '#fff',
 		fontSize: 16,
-		fontWeight: '600',
+		fontFamily: 'GeneralSans-Semibold',
+	},
+	orsignin: {
+		flexDirection: 'row',
+		gap: 10,
+		alignItems: 'center',
+		justifyContent: 'center',
+		marginBottom: 20,
+	},
+	orText: {
+		textAlign: 'center',
 		fontFamily: 'GeneralSans-Regular',
+
+		color: '#9b9b9b',
+	},
+	socialButtonsContainer: {
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+		marginBottom: 30,
+	},
+	socialButton: {
+		padding: 10,
+		borderWidth: 1,
+		borderColor: '#e0e0e0',
+		borderRadius: 8,
+	},
+	footerTextContainer: {
+		flexDirection: 'row',
+		justifyContent: 'center',
+		// marginVertical: 20,
+	},
+	footerText: {
+		color: '#9b9b9b',
+		fontFamily: 'GeneralSans-Regular',
+	},
+	createAccountText: {
+		color: '#265BFF',
+		fontFamily: 'GeneralSans-Semibold',
 	},
 });

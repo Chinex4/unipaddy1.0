@@ -10,77 +10,33 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import UpNavigation from '../components/UpNavigation';
-import TopDesign from '../components/TopDesign';
-
-const ForgotPasswordScreen = () => {
-	const navigation = useNavigation();
-	const [email, setEmail] = useState('');
-	const handleNavigate = () => {
-		if (email === '') {
-			alert('Please enter your email address.');
-		} else {
-			navigation.navigate('VerificationInfo', { email });
-		}
-	};
-	return (
-		<>
-			<TopDesign />
-			<View style={styles.container}>
-				<UpNavigation />
-				<View style={styles.content}>
-					<Text style={styles.title}>Forgot Password</Text>
-					<Text style={styles.subtitle}>
-						Enter your email address to receive a verification code.
-					</Text>
-					<TextInput
-						style={styles.input}
-						placeholder='Enter your email'
-						keyboardType='email-address'
-						autoCapitalize='none'
-						value={email}
-						onChangeText={setEmail}
-					/>
-					<TouchableOpacity
-						style={styles.button}
-						onPress={handleNavigate}>
-						<Text style={styles.buttonText}>Continue</Text>
-					</TouchableOpacity>
-				</View>
-			</View>
-		</>
-	);
-};
-
-const VerificationInfoScreen = ({ route }) => {
+const EmailVerificationInfoScreen = ({ route }) => {
 	const navigation = useNavigation();
 	const { email } = route.params;
 
 	return (
-		<>
-			<TopDesign />
-			<View style={styles.container}>
-				<UpNavigation />
-				<View style={styles.content}>
-					<Image
-						source={require('../../assets/images/verification.png')}
-						style={styles.image}
-					/>
-					<Text style={styles.title}>Verification Code</Text>
-					<Text style={styles.subtitle}>
-						A 4-digit code has been sent to {email}
-					</Text>
-					<TouchableOpacity
-						style={styles.button}
-						onPress={() => navigation.navigate('OTPVerification', { email })}>
-						<Text style={styles.buttonText}>Continue</Text>
-					</TouchableOpacity>
-				</View>
+		<View style={styles.container}>
+			<UpNavigation />
+			<View style={styles.content}>
+				<Image
+					source={require('../../assets/images/verification.png')}
+					style={styles.image}
+				/>
+				<Text style={styles.title}>Verification Code</Text>
+				<Text style={styles.subtitle}>
+					A 4-digit code has been sent to {email}
+				</Text>
+				<TouchableOpacity
+					style={styles.button}
+					onPress={() => navigation.navigate('EmailOTPVerification', { email })}>
+					<Text style={styles.buttonText}>Continue</Text>
+				</TouchableOpacity>
 			</View>
-		</>
+		</View>
 	);
 };
 
-const OTPVerificationScreen = ({ route }) => {
+const EmailOTPVerificationScreen = ({ route }) => {
 	const navigation = useNavigation();
 	const [otp, setOtp] = useState(['', '', '', '']);
 	const inputRefs = [useRef(), useRef(), useRef(), useRef()];
@@ -93,11 +49,10 @@ const OTPVerificationScreen = ({ route }) => {
 	};
 	const handleOTPVerification = () => {
 		if (otp.join('').length === 4) {
-		  // Assume OTP is verified
-		  navigation.navigate('CreateNewPassword');
+			// Assume OTP is verified
+			navigation.navigate('EmailVerificationSuccess');
 		}
-	  };
-	  
+	};
 
 	return (
 		<View style={styles.container}>
@@ -139,6 +94,7 @@ const OTPVerificationScreen = ({ route }) => {
 		</View>
 	);
 };
+export { EmailVerificationInfoScreen, EmailOTPVerificationScreen };
 
 const styles = StyleSheet.create({
 	container: {
@@ -152,7 +108,6 @@ const styles = StyleSheet.create({
 	content: {
 		marginTop: 30,
 		width: '100%',
-		zIndex: 20,
 		// position: 'relative',
 		alignItems: 'center',
 	},
@@ -213,5 +168,3 @@ const styles = StyleSheet.create({
 		fontFamily: 'GeneralSans-Semibold',
 	},
 });
-
-export { ForgotPasswordScreen, VerificationInfoScreen, OTPVerificationScreen };

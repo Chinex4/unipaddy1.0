@@ -11,8 +11,14 @@ import {
 	OTPVerificationScreen,
 	VerificationInfoScreen,
 } from './src/screens/ForgotPasswordScreen';
+import {
+	EmailOTPVerificationScreen,
+	EmailVerificationInfoScreen,
+} from './src/screens/EmailVerificationScreen';
 import CreateNewPasswordScreen from './src/screens/CreateNewPasswordScreen';
 import PasswordSuccessScreen from './src/screens/PasswordSuccessScreen';
+import CreateAccountScreen from './src/screens/CreateAccountScreen';
+import EmailVerificationSuccessScreen from './src/screens/EmailVerificationSuccessScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -66,6 +72,23 @@ export default function App() {
 						name='PasswordSuccessScreen'
 						component={PasswordSuccessScreen}
 					/>
+					<Stack.Screen
+						name='Register'
+						component={CreateAccountScreen}
+					/>
+					<Stack.Screen
+						name='EmailVerificationInfo'
+						component={EmailVerificationInfoScreen}
+					/>
+					<Stack.Screen
+						name='EmailOTPVerification'
+						component={EmailOTPVerificationScreen}
+					/>
+					<Stack.Screen
+						name='EmailVerificationSuccess'
+						component={EmailVerificationSuccessScreen}
+					/>
+					
 				</Stack.Navigator>
 			</NavigationContainer>
 	);
